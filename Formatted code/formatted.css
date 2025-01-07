@@ -321,7 +321,23 @@ noscript {
     transition: all 0.3s ease;
 }
 
-
+.info-dp-section {
+    display: flex;
+    align-items: flex-start; /* Align text and image to the top */
+    gap: 20px; /* Space between text and image */
+  }
+  
+  .about-info {
+    flex: 1; /* Take up available space for the text */
+  }
+  
+  .about-dp img {
+    max-width: 200px; /* Adjust as needed */
+    height: auto;
+    border-radius: 50%; /* Makes the image circular if it's square */
+    object-fit: cover;
+  }
+  
 
 .logo{
     position: relative;
@@ -823,6 +839,24 @@ noscript {
     transform: translate(2px ,2px);
   }
 /* landing page code ends here */
+
+.info-dp-section {
+    display: flex;
+    align-items: flex-start; /* Align text and image to the top */
+    gap: 20px; /* Space between text and image */
+  }
+  
+  .about-info {
+    flex: 1; /* Take up available space for the text */
+  }
+  
+  .about-dp img {
+    max-width: 200px; /* Adjust as needed */
+    height: auto;
+    border-radius: 50%; /* Makes the image circular if it's square */
+    object-fit: cover;
+  }
+  
 
 /* about section starts from here */
 .about-section-container{
