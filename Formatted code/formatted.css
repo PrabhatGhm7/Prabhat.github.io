@@ -813,6 +813,56 @@ noscript {
 /* landing page code ends here */
 
 /* about section starts from here */
+/* Container for text and image */
+.info-dp-section {
+  display: flex; /* Arrange items horizontally */
+  align-items: flex-start; /* Align text and image at the top */
+  justify-content: space-between; /* Add space between text and image */
+  gap: 20px; /* Space between text and image */
+}
+
+.about-info {
+  flex: 1; /* Take up available space for text */
+  max-width: 60%; /* Limit width of the text */
+}
+
+.about-info ul {
+  list-style-type: disc; /* Add bullet points */
+  margin-left: 20px; /* Indent the list */
+}
+
+.about-info li {
+  margin-bottom: 10px; /* Add space between list items */
+}
+
+.about-dp img {
+  max-width: 200px; /* Adjust size of the image */
+  height: auto;
+  border-radius: 50%; /* Makes the image circular if it's square */
+  object-fit: cover;
+}
+
+/* Optional: Make the section responsive for smaller screens */
+@media (max-width: 768px) {
+  .info-dp-section {
+    flex-direction: column; /* Stack text and image vertically on smaller screens */
+    align-items: center;
+    text-align: center;
+  }
+
+  .about-info {
+    max-width: 100%; /* Allow full width for text */
+  }
+
+  .about-dp img {
+    max-width: 150px; /* Adjust image size for smaller screens */
+  }
+}
+
+
+
+
+
 .about-section-container{
     width: 100%;
     height:fit-content;
