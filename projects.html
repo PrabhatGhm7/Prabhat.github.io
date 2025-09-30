@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Prabhat Ghimire</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1a1a1a;
+            --secondary-dark: #2d2d2d;
+            --accent-amber: #f59e0b;
+            --text-light: #fafafa;
+            --text-muted: #9ca3af;
+            --sage-green: #6b7280;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        .nav-glass {
+            backdrop-filter: blur(10px);
+            background: rgba(26, 26, 26, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-amber);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .filter-btn {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--accent-amber);
+            color: var(--accent-amber);
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--accent-amber);
+            color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+        }
+        
+        .project-card {
+            background: var(--secondary-dark);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent-amber);
+        }
+        
+        .project-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        
+        .project-card:hover .project-image {
+            transform: scale(1.05);
+        }
+        
+        .project-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.9) 0%, rgba(217, 119, 6, 0.9) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .project-card:hover .project-overlay {
+            opacity: 1;
+        }
+        
+        .tech-badge {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-amber);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid var(--accent-amber);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: var(--secondary-dark);
+            border-radius: 16px;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 2rem;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(245, 158, 11, 0.2);
+            border: none;
+            color: var(--accent-amber);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            background: var(--accent-amber);
+            color: var(--primary-dark);
+        }
+        
+        .stats-card {
+            background: var(--secondary-dark);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-amber);
+        }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .grid-masonry {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            align-items: start;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-masonry {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-glass fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-xl font-bold text-amber-400">Prabhat Ghimire</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="index.html" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Home</a>
+                        <a href="projects.html" class="nav-link text-amber-400 px-3 py-2 text-sm font-medium">Projects</a>
+                        <a href="skills.html" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Skills</a>
+                        <a href="index.html#contact" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-24 pb-16 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <h1 class="text-5xl font-bold mb-6 reveal">
+                Featured <span class="text-amber-400">Projects</span>
+            </h1>
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto mb-12 reveal">
+                Explore my portfolio of innovative projects spanning machine learning, web development, 
+                and AI applications. Each project represents a unique challenge and creative solution.
+            </p>
+        </div>
+    </section>
+
+    <!-- Project Statistics -->
+    <section class="py-16 px-4 bg-gray-900/30">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 reveal">
+                <div class="stats-card">
+                    <div class="text-3xl font-bold text-amber-400 mb-2">10+</div>
+                    <p class="text-gray-300">Major Projects</p>
+                </div>
+                <div class="stats-card">
+                    <div class="text-3xl font-bold text-amber-400 mb-2">15+</div>
+                    <p class="text-gray-300">Technologies Used</p>
+                </div>
+                <div class="stats-card">
+                    <div class="text-3xl font-bold text-amber-400 mb-2"> < 95%</div>
+                    <p class="text-gray-300">API Uptime</p>
+                </div>
+                <div class="stats-card">
+                    <div class="text-3xl font-bold text-amber-400 mb-2"> < 82% </div>
+                    <p class="text-gray-300">ML Accuracy</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Buttons -->
+    <section class="py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-wrap justify-center gap-4 mb-12 reveal">
+                <button class="filter-btn active" data-filter="all">All Projects</button>
+                <button class="filter-btn" data-filter="python">Python</button>
+                <button class="filter-btn" data-filter="django">Django</button>
+                <button class="filter-btn" data-filter="ml">Machine Learning</button>
+                <button class="filter-btn" data-filter="ai">AI</button>
+                <button class="filter-btn" data-filter="web">Web Development</button>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="grid-masonry reveal" id="projectsGrid">
+                <!-- Bloodbuddy Project -->
+                <div class="project-card" data-category="django web python" data-project="bloodbuddy">
+                    <img src="resources/project-bloodbuddy.jpg" alt="Bloodbuddy Platform" class="project-image">
+                    <div class="project-overlay">
+                        <h3 class="text-2xl font-bold mb-4">View Project</h3>
+                        <p class="text-center px-4">Django-based social platform for blood donation</p>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3 text-amber-400">Bloodbuddy</h3>
+                        <p class="text-gray-300 mb-4">
+                            Full-stack Django platform connecting 200+ donors with recipients. Features scalable chat system 
+                            handling 100+ concurrent users and geolocation-based donor matching.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="tech-badge">Django</span>
+                            <span class="tech-badge">Python</span>
+                            <span class="tech-badge">MySQL</span>
+                            <span class="tech-badge">WebSocket</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            <span>⚡ Reduced response time by 50%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- F1 Analytics Project -->
+                <div class="project-card" data-category="ml python ai" data-project="f1-analytics">
+                    <img src="resources/project-f1-analytics.jpg" alt="F1 Analytics" class="project-image">
+                    <div class="project-overlay">
+                        <h3 class="text-2xl font-bold mb-4">View Project</h3>
+                        <p class="text-center px-4">ML approach to predict F1 champions</p>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3 text-amber-400">Race Analytics</h3>
+                        <p class="text-gray-300 mb-4">
+                            Machine learning pipeline processing 25,000+ race statistics with custom feature engineering 
+                            boosting prediction accuracy by 15% and reducing training time by 20%.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="tech-badge">Scikit-learn</span>
+                            <span class="tech-badge">Pandas</span>
+                            <span class="tech-badge">TensorFlow</span>
+                            <span class="tech-badge">Python</span>
+                            <span class="tech-badge">Gradio</span>
+                            <span class="tech-badge">Hugging Face</span>
+
+
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            <span>🎯 82% prediction accuracy</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- ATC command -->
+
+            <div class="project-card" data-category="ai python ml" data-project="atc-voice-classification">
+                <img src="resources/atc.jpg" alt="ATC Voice Command Classification" class="project-image">
+                <div class="project-overlay">
+                    <h3 class="text-2xl font-bold mb-4">View Project</h3>
+                    <p class="text-center px-4"></p>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-3 text-amber-400">Voice Command Classification for ATC</h3>
+                    <p class="text-gray-300 mb-4">
+                        An AI-driven system that classifies air traffic control voice commands in real time using 
+                        DistilBERT and speech-to-text integration, improving communication reliability in aviation.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="tech-badge">DistilBERT</span>
+                        <span class="tech-badge">Speech Recognition</span>
+                        <span class="tech-badge">PyTorch</span>
+                        <span class="tech-badge">Transformers</span>
+                        <span class="tech-badge">Python</span>
+                    </div>
+                    <div class="text-sm text-gray-400">
+                        <span>✈️ Real-time ATC command classification</span>
+                    </div>
+                </div>
+            </div>
+                <!-- RAG Chatbot Project -->
+                <div class="project-card" data-category="ai python ml" data-project="rag-chatbot">
+                    <img src="resources/project-rag-chatbot.jpg" alt="RAG Chatbot" class="project-image">
+                    <div class="project-overlay">
+                        <h3 class="text-2xl font-bold mb-4">View Project</h3>
+                        <p class="text-center px-4">PDF question answering system</p>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3 text-amber-400">RAG Chatbot</h3>
+                        <p class="text-gray-300 mb-4">
+                            Vector store using ChromaDB for fast semantic retrieval with Google FLAN-T5 for context-aware 
+                            answers. Interactive chat interface for real-time PDF question-answering.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="tech-badge">Transformers</span>
+                            <span class="tech-badge">ChromaDB</span>
+                            <span class="tech-badge">Hugging Face</span>
+                            <span class="tech-badge">NLP</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            <span>⚡ Fast semantic retrieval</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- YouTube Clone Project -->
+                <div class="project-card" data-category="django web python" data-project="youtube-clone">
+                    <img src="resources/project-youtube-clone.jpg" alt="YouTube Clone" class="project-image">
+                    <div class="project-overlay">
+                        <h3 class="text-2xl font-bold mb-4">View Project</h3>
+                        <p class="text-center px-4">Scalable video streaming platform</p>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3 text-amber-400">YouTube Clone</h3>
+                        <p class="text-gray-300 mb-4">
+                            Scalable video streaming system with high-quality uploads and playback. Optimized database 
+                            with caching system reducing page load time from 4s to 2s.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="tech-badge">Django</span>
+                            <span class="tech-badge">Video Streaming</span>
+                            <span class="tech-badge">OAuth</span>
+                            <span class="tech-badge">Caching</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            <span>⚡ 50% faster load times</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Motion Tracking Project -->
+                <div class="project-card" data-category="python ai ml" data-project="motion-tracking">
+                    <img src="resources/project-motion-tracking.jpg" alt="Motion Tracking" class="project-image">
+                    <div class="project-overlay">
+                        <h3 class="text-2xl font-bold mb-4">View Project</h3>
+                        <p class="text-center px-4">Real-time skeletal tracking</p>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3 text-amber-400">Kinect Skeletal Tracking</h3>
+                        <p class="text-gray-300 mb-4">
+                            Real-time Python application using OpenCV, MediaPipe, and Pygame to detect and animate 
+                            glowing skeleton with face landmarks through video feed capture.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="tech-badge">OpenCV</span>
+                            <span class="tech-badge">MediaPipe</span>
+                            <span class="tech-badge">Pygame</span>
+                            <span class="tech-badge">Computer Vision</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            <span>👁️ Real-time processing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content relative">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <div id="modalContent">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 py-8 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="text-gray-400">© 2025 Prabhat Ghimire. Built with passion and code.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Project data for modal content
+        const projectData = {
+            'bloodbuddy': {
+                title: 'Bloodbuddy - Blood Donation Platform',
+                description: 'A comprehensive Django-based social platform designed to connect blood donors with recipients in real-time.',
+                features: [
+                    'Scalable chat system handling 100+ concurrent users with <100ms latency',
+                    'Geolocation-based donor matching reducing response time by 50%',
+                    'User authentication and profile management',
+                    'Real-time notifications and messaging',
+                    'Admin dashboard for system monitoring'
+                ],
+                technologies: ['Django', 'Python', 'MySQL', 'WebSocket', 'Redis', 'JavaScript'],
+                impact: 'Connected 200+ donors with recipients, significantly improving emergency response times.',
+                github: 'https://github.com/PrabhatGhm7/BloodBuddy',
+        
+            },
+            'f1-analytics': {
+                title: 'Race Analytics - F1 Prediction System',
+                description: 'Machine learning pipeline for predicting Formula 1 race outcomes based on historical data analysis.',
+                features: [
+                    'Processed 25,000+ race statistics from multiple seasons',
+                    'Custom feature engineering boosting accuracy by 15%',
+                    'Performance optimization reducing training time by 20%',
+                    'Real-time prediction updates during races',
+                    'Comprehensive visualization dashboard'
+                ],
+                technologies: ['Python', 'Scikit-learn', 'Pandas', 'TensorFlow', 'Matplotlib', 'Seaborn'],
+                impact: 'Achieved 82% prediction accuracy, providing valuable insights for racing enthusiasts.',
+                github: 'https://github.com/PrabhatGhm7/F1-Prediction',
+                demo: 'https://huggingface.co/spaces/Prabhat17/Neural_Network_f1'
+            },
+            'rag-chatbot': {
+                title: 'RAG Chatbot - PDF Question Answering',
+                description: 'Advanced retrieval-augmented generation system for intelligent document analysis and question answering.',
+                features: [
+                    'Vector store using ChromaDB for fast semantic retrieval',
+                    'Google FLAN-T5 integration for context-aware answers',
+                    'Interactive chat interface with real-time responses',
+                    'Support for multiple PDF formats and sizes',
+                    'Context preservation across conversation history'
+                ],
+                technologies: ['Python', 'Transformers', 'ChromaDB', 'Hugging Face', 'NLP', 'Flask'],
+                impact: 'Enabled efficient document analysis with accurate, context-aware responses.',
+                github: 'https://github.com/PrabhatGhm7/RAG_Chatbot',
+             
+            },
+            'youtube-clone': {
+                title: 'YouTube Clone - Video Streaming Platform',
+                description: 'Full-featured video streaming platform built with Django, supporting high-quality video uploads and playback.',
+                features: [
+                    'Scalable video streaming system with adaptive bitrate',
+                    'Optimized database with caching (Redis)',
+                    'OAuth authentication for enhanced security',
+                    'Video upload and processing pipeline',
+                    'User comments and engagement features'
+                ],
+                technologies: ['Django', 'Python', 'PostgreSQL', 'Redis', 'AWS S3', 'OAuth'],
+                impact: 'Reduced page load time from 4 seconds to 2 seconds, improving user experience significantly.',
+                github: 'https://github.com/PrabhatGhm7/Django_Youtube',
+            
+            },
+            'atc-voice-classification': {
+                title: 'Voice Command Classification for ATC',
+                description: 'AI-driven system that classifies air traffic control voice commands in real time using DistilBERT and speech-to-text integration.',
+                features: [
+                    'Real-time audio processing and transcription',
+                    'DistilBERT model fine-tuned for ATC command classification',
+                    'Integration with speech-to-text APIs for accurate transcription',
+                    'User-friendly interface for monitoring and managing commands',
+                    'Robust error handling and fallback mechanisms'
+                ],
+                technologies: ['Python', 'PyTorch', 'Transformers', 'Speech Recognition', 'Flask'],
+                impact: 'Improved communication reliability in aviation by accurately classifying ATC commands in real time.',
+                github: 'https://huggingface.co/spaces/Prabhat17/ATC_Prediction/tree/main',
+                demo: 'https://huggingface.co/spaces/Prabhat17/ATC_Prediction'
+            },
+            'motion-tracking': {
+                title: 'Kinect Skeletal Tracking',
+                description: 'Real-time computer vision application for human pose detection and skeletal animation.',
+                features: [
+                    'Real-time skeletal tracking using MediaPipe',
+                    'Glowing skeleton animation with face landmarks',
+                    'Interactive Pygame interface',
+                    'Video feed processing and visualization',
+                    'Smooth joint tracking and rendering'
+                ],
+                technologies: ['Python', 'OpenCV', 'MediaPipe', 'Pygame', 'Computer Vision'],
+                impact: 'Created engaging interactive experiences for motion-based applications.',
+                github: 'https://github.com/PrabhatGhm7/Kinect-Skeletal-tracking',
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeProjectFiltering();
+            initializeProjectCards();
+            initializeScrollAnimations();
+            initializeNavigation();
+        });
+
+        // Initialize project filtering
+        function initializeProjectFiltering() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const projectCards = document.querySelectorAll('.project-card');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // Update active button
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Filter projects
+                    projectCards.forEach(card => {
+                        const categories = card.getAttribute('data-category');
+                        
+                        if (filter === 'all' || categories.includes(filter)) {
+                            card.style.display = 'block';
+                            anime({
+                                targets: card,
+                                opacity: [0, 1],
+                                scale: [0.8, 1],
+                                duration: 600,
+                                easing: 'easeOutCubic',
+                                delay: anime.stagger(100)
+                            });
+                        } else {
+                            anime({
+                                targets: card,
+                                opacity: [1, 0],
+                                scale: [1, 0.8],
+                                duration: 300,
+                                easing: 'easeInCubic',
+                                complete: () => {
+                                    card.style.display = 'none';
+                                }
+                            });
+                        }
+                    });
+                });
+            });
+        }
+
+        // Initialize project card interactions
+        function initializeProjectCards() {
+            const projectCards = document.querySelectorAll('.project-card');
+            
+            projectCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const projectId = this.getAttribute('data-project');
+                    openProjectModal(projectId);
+                });
+            });
+        }
+
+        // Open project modal
+        function openProjectModal(projectId) {
+            const modal = document.getElementById('projectModal');
+            const modalContent = document.getElementById('modalContent');
+            const project = projectData[projectId];
+            
+            if (project) {
+                modalContent.innerHTML = `
+                    <div class="p-8">
+                        <h2 class="text-3xl font-bold text-amber-400 mb-4">${project.title}</h2>
+                        <p class="text-gray-300 text-lg mb-6">${project.description}</p>
+                        
+                        <div class="mb-6">
+                            <h3 class="text-xl font-semibold text-amber-400 mb-3">Key Features</h3>
+                            <ul class="space-y-2">
+                                ${project.features.map(feature => `<li class="text-gray-300 flex items-start"><span class="text-amber-400 mr-2">•</span>${feature}</li>`).join('')}
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h3 class="text-xl font-semibold text-amber-400 mb-3">Technologies Used</h3>
+                            <div class="flex flex-wrap gap-2">
+                                ${project.technologies.map(tech => `<span class="tech-badge">${tech}</span>`).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h3 class="text-xl font-semibold text-amber-400 mb-3">Impact</h3>
+                            <p class="text-gray-300">${project.impact}</p>
+                        </div>
+                        
+                        <div class="flex gap-4">
+                            <a href="${project.github}" class="bg-amber-400 text-gray-900 px-6 py-3 rounded-lg font-semibold hover:bg-amber-500 transition-colors">
+                                View Code
+                            </a>
+                            <a href="${project.demo}" class="border border-amber-400 text-amber-400 px-6 py-3 rounded-lg font-semibold hover:bg-amber-400 hover:text-gray-900 transition-colors">
+                                Live Demo
+                            </a>
+                        </div>
+                    </div>
+                `;
+                
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                // Animate modal appearance
+                anime({
+                    targets: '.modal-content',
+                    scale: [0.8, 1],
+                    opacity: [0, 1],
+                    duration: 400,
+                    easing: 'easeOutCubic'
+                });
+            }
+        }
+
+        // Close project modal
+        function closeModal() {
+            const modal = document.getElementById('projectModal');
+            
+            anime({
+                targets: '.modal-content',
+                scale: [1, 0.8],
+                opacity: [1, 0],
+                duration: 300,
+                easing: 'easeInCubic',
+                complete: () => {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+
+        // Initialize scroll animations
+        function initializeScrollAnimations() {
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            revealElements.forEach(element => {
+                revealObserver.observe(element);
+            });
+        }
+
+        // Initialize navigation
+        function initializeNavigation() {
+            const nav = document.querySelector('nav');
+            let lastScrollY = window.scrollY;
+            
+            window.addEventListener('scroll', () => {
+                const currentScrollY = window.scrollY;
+                
+                if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                    nav.style.transform = 'translateY(-100%)';
+                } else {
+                    nav.style.transform = 'translateY(0)';
+                }
+                
+                lastScrollY = currentScrollY;
+            });
+        }
+
+        // Close modal on outside click
+        document.getElementById('projectModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prabhat Ghimire - Python & ML Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://unpkg.com/splitting@1.0.6/dist/splitting.js"></script>
+    <link href="https://unpkg.com/splitting@1.0.6/dist/splitting.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1a1a1a;
+            --secondary-dark: #2d2d2d;
+            --accent-amber: #f59e0b;
+            --text-light: #fafafa;
+            --text-muted: #9ca3af;
+            --sage-green: #6b7280;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .hero-bg {
+            background: url('resources/hero-bg.jpg') center/cover;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+             .icon-container {
+            transition: all 0.3s ease;
+        }
+        .icon-container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(251, 191, 36, 0.2);
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 26, 26, 0.7);
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+        
+        .nav-glass {
+            backdrop-filter: blur(10px);
+            background: rgba(26, 26, 26, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-amber);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .typewriter {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-light) 0%, var(--accent-amber) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, var(--accent-amber) 0%, #d97706 100%);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background: var(--accent-amber);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .timeline-item.left {
+            left: 0;
+        }
+        
+        .timeline-item.right {
+            left: 50%;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background: var(--accent-amber);
+            border-radius: 50%;
+            top: 15px;
+            z-index: 1;
+        }
+        
+        .timeline-item.right::after {
+            left: -10px;
+        }
+        
+        .timeline-content {
+            padding: 20px 30px;
+            background: var(--secondary-dark);
+            position: relative;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+                /* Technical Expertise Section */
+        .tech-section {
+            padding: 5rem 1rem;
+            background-color: rgba(17, 24, 39, 0.5);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .tech-container {
+            max-width: 80rem;
+            margin: 0 auto;
+        }
+        
+        .tech-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .tech-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .tech-subtitle {
+            color: #94a3b8;
+            max-width: 42rem;
+            margin: 0 auto;
+        }
+        
+        /* Scrolling container */
+        .tech-scroll-container {
+            position: relative;
+            overflow: hidden;
+            padding: 1rem 0;
+            margin-bottom: 3rem;
+        }
+        
+        .tech-scroll-track {
+            display: flex;
+            width: max-content;
+            animation: scroll 30s linear infinite;
+        }
+        
+        .tech-scroll-track:hover {
+            animation-play-state: paused;
+        }
+        
+        /* Tech items */
+        .tech-item {
+            background-color: rgba(30, 41, 59, 0.8);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            margin: 0 0.75rem;
+            min-width: 140px;
+            flex-shrink: 0;
+        }
+        
+        .tech-item:hover {
+            background-color: rgba(51, 65, 85, 0.8);
+            transform: translateY(-0.5rem);
+        }
+        
+        .tech-icon {
+            height: 4rem;
+            width: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .tech-icon img {
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+        }
+        
+        .tech-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        /* Gradient overlays for smooth edges */
+        .tech-scroll-container::before,
+        .tech-scroll-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        
+        .tech-scroll-container::before {
+            left: 0;
+            background: linear-gradient(to right, rgba(15, 23, 42, 1), transparent);
+        }
+        
+        .tech-scroll-container::after {
+            right: 0;
+            background: linear-gradient(to left, rgba(15, 23, 42, 1), transparent);
+        }
+        
+        /* Animation */
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+        
+        /* CTA Button */
+        .cta-button {
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .tech-section {
+                padding: 3rem 1rem;
+            }
+            
+            .tech-title {
+                font-size: 1.875rem;
+            }
+            
+            .tech-item {
+                min-width: 120px;
+                padding: 1rem;
+            }
+            
+            .tech-icon {
+                height: 3rem;
+                width: 3rem;
+            }
+        }
+
+        
+        .contact-form {
+            background: var(--secondary-dark);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-amber);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+        
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item::before {
+                left: 60px;
+                border: medium solid var(--accent-amber);
+                border-width: 10px 10px 10px 0;
+                border-color: transparent var(--accent-amber) transparent transparent;
+            }
+            
+            .timeline-item.left::after,
+            .timeline-item.right::after {
+                left: 21px;
+            }
+            
+            .timeline-item.right {
+                left: 0%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-glass fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-amber-400">Prabhat Ghimire</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#home" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Home</a>
+                        <a href="projects.html" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Projects</a>
+                        <a href="skills.html" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Skills</a>
+                        <a href="#contact" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-bg">
+        <div class="floating-shapes">
+            <div class="shape w-20 h-20 bg-amber-400 rounded-full top-20 left-10"></div>
+            <div class="shape w-16 h-16 bg-gray-600 rounded-lg top-40 right-20"></div>
+            <div class="shape w-12 h-12 bg-amber-300 rounded-full top-60 left-1/3"></div>
+        </div>
+        
+        <div class="hero-content">
+            <h1 class="typewriter" id="typewriter"></h1>
+            <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                Python, Django, and Machine Learning developer with extensive experience in designing scalable Restful APIs, 
+                performing data analysis, and building AI-powered applications.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button class="cta-button" onclick="window.location.href='projects.html'">
+                    View My Projects
+                </button>
+<button 
+    onclick="downloadResume()" 
+    class="border border-amber-400 text-amber-400 px-6 py-3 rounded-lg font-semibold hover:bg-amber-400 hover:text-gray-900 transition-all duration-300"
+>
+    Download Resume
+</button>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Professional Experience Timeline -->
+    <section class="py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-16 reveal">Professional Experience</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item left reveal">
+                    <div class="timeline-content">
+                        <h3 class="text-xl font-semibold text-amber-400 mb-2">Research & Development Intern</h3>
+                        <p class="text-gray-400 mb-2">YHH IT Solutions • May 2025 - Present</p>
+                        <p class="text-gray-300 mb-4">Conducting requirement analysis and early-stage project planning. Designing system diagrams and assisting in software prototype development with python and django.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-badge">Python</span>
+                            <span class="skill-badge">Machine Learning</span>
+                            <span class="skill-badge">Django</span>
+                            <span class="skill-badge">DRF</span>
+                            <span class="skill-badge">System Design</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item right reveal">
+                    <div class="timeline-content">
+                        <h3 class="text-xl font-semibold text-amber-400 mb-2">Python/ML Intern</h3>
+                        <p class="text-gray-400 mb-2">Together We Can, Nepal • 2023 - 2024</p>
+                        <p class="text-gray-300 mb-4">Built Django RESTful API , created predictive models with high accuracy, and enhanced model training efficiency through parallel processing.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-badge">Web Developement</span>
+                            <span class="skill-badge">Django</span>
+                            <span class="skill-badge">REST API</span>
+                            <span class="skill-badge">Machine Learning</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item left reveal">
+                    <div class="timeline-content">
+                        <h3 class="text-xl font-semibold text-amber-400 mb-2">Bachelor of Computer Engineering</h3>
+                        <p class="text-gray-400 mb-2">Pokhara University • 2021 - 2026</p>
+                        <p class="text-gray-300 mb-4">Currently in 8th semester with focus on machine learning, data analysis, and software development. Strong academic performance with practical project experience and professional experience.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-badge">Computer Science</span>
+                            <span class="skill-badge">Algorithms</span>
+                            <span class="skill-badge">Data Structures</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        
+    </section>
+
+    <!-- Technical Expertise Section -->
+    <section class="tech-section">
+        <div class="tech-container">
+            <div class="tech-header">
+                <h2 class="tech-title">Technical Expertise</h2>
+                <p class="tech-subtitle">
+                    Technologies and tools I use to build innovative solutions
+                </p>
+            </div>
+            
+            <!-- Scrolling container -->
+            <div class="tech-scroll-container">
+                <div class="tech-scroll-track">
+                    <!-- First set of tech items -->
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">
+                        </div>
+                        <span class="tech-name">Python</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" alt="Django">
+                        </div>
+                        <span class="tech-name">Django</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow">
+                        </div>
+                        <span class="tech-name">TensorFlow</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg" alt="PyTorch">
+                        </div>
+                        <span class="tech-name">PyTorch</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" alt="Pandas">
+                        </div>
+                        <span class="tech-name">Pandas</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" alt="NumPy">
+                        </div>
+                        <span class="tech-name">NumPy</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scikitlearn/scikitlearn-original.svg" alt="Scikit-learn">
+                        </div>
+                        <span class="tech-name">Scikit-learn</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="MySQL">
+                        </div>
+                        <span class="tech-name">MySQL</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="PostgreSQL">
+                        </div>
+                        <span class="tech-name">PostgreSQL</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker">
+                        </div>
+                        <span class="tech-name">Docker</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git">
+                        </div>
+                        <span class="tech-name">Git</span>
+                    </div>
+                    
+                    <!-- Duplicate set for seamless scrolling -->
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">
+                        </div>
+                        <span class="tech-name">Python</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" alt="Django">
+                        </div>
+                        <span class="tech-name">Django</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow">
+                        </div>
+                        <span class="tech-name">TensorFlow</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg" alt="PyTorch">
+                        </div>
+                        <span class="tech-name">PyTorch</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" alt="Pandas">
+                        </div>
+                        <span class="tech-name">Pandas</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" alt="NumPy">
+                        </div>
+                        <span class="tech-name">NumPy</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scikitlearn/scikitlearn-original.svg" alt="Scikit-learn">
+                        </div>
+                        <span class="tech-name">Scikit-learn</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="MySQL">
+                        </div>
+                        <span class="tech-name">MySQL</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="PostgreSQL">
+                        </div>
+                        <span class="tech-name">PostgreSQL</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker">
+                        </div>
+                        <span class="tech-name">Docker</span>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git">
+                        </div>
+                        <span class="tech-name">Git</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button class="cta-button" onclick="window.location.href='skills.html'">
+                    Explore All Skills
+                </button>
+            </div>
+        </div>
+    </section>
+
+ 
+ 
+<body class="bg-gray-900 text-white">
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 px-4">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-16 reveal">Let's Connect</h2>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="reveal">
+                    <h3 class="text-2xl font-semibold mb-6 text-amber-400">Get In Touch</h3>
+                    <p class="text-gray-300 mb-8">
+                        I'm always interested in discussing new opportunities, innovative projects, 
+                        and the latest developments in AI and machine learning.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <!-- Email -->
+                        <a href="mailto:prabhatghimire7@gmail.com" class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-800 transition-all duration-300 group">
+                            <div class="icon-container w-12 h-12 bg-amber-400 rounded-full flex items-center justify-center group-hover:bg-amber-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold">Email</p>
+                                <p class="text-gray-400 group-hover:text-amber-400 transition-colors">
+                                    prabhatghimire7@gmail.com
+                                </p>
+                            </div>
+                        </a>
+
+                        <!-- LinkedIn -->
+                        <a href="https://www.linkedin.com/in/prabhat-ghimire-9b0616262/" target="_blank" class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-800 transition-all duration-300 group">
+                            <div class="icon-container w-12 h-12 bg-amber-400 rounded-full flex items-center justify-center group-hover:bg-amber-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-900" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold">LinkedIn</p>
+                                <p class="text-gray-400 group-hover:text-amber-400 transition-colors">
+                                    PrabhatGhm7
+                                </p>
+                            </div>
+                        </a>
+
+                        <!-- GitHub -->
+                        <a href="https://github.com/PrabhatGhm7" target="_blank" class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-800 transition-all duration-300 group">
+                            <div class="icon-container w-12 h-12 bg-amber-400 rounded-full flex items-center justify-center group-hover:bg-amber-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-900" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold">GitHub</p>
+                                <p class="text-gray-400 group-hover:text-amber-400 transition-colors">
+                                    PrabhatGhm7
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Contact Form (Optional) -->
+                <div class="reveal">
+                    <h3 class="text-2xl font-semibold mb-6 text-amber-400">Send a Message</h3>
+                    <form class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-300 mb-1">Name</label>
+                            <input type="text" id="name" class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all" placeholder="Your name">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                            <input type="email" id="email" class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all" placeholder="Your email">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-300 mb-1">Message</label>
+                            <textarea id="message" rows="4" class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all" placeholder="Your message"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-amber-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-amber-300 transition-all duration-300 transform hover:-translate-y-1">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Simple reveal animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const reveals = document.querySelectorAll('.reveal');
+            
+            const revealOnScroll = () => {
+                reveals.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        element.classList.add('active');
+                    }
+                });
+            };
+            
+            window.addEventListener('scroll', revealOnScroll);
+            // Initial check
+            revealOnScroll();
+        });
+    </script>
+
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 py-8 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="text-gray-400">© 2025 Prabhat Ghimire. Built with passion and code.</p>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>
