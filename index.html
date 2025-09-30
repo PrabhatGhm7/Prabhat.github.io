@@ -440,24 +440,27 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="nav-glass fixed top-0 left-0 right-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <span class="text-xl font-bold text-amber-400">Prabhat Ghimire</span>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-8">
-                        <a href="#home" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Home</a>
-                        <a href="projects.html" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Projects</a>
-                        <a href="skills.html" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Skills</a>
-                        <a href="#contact" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Contact</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+<div class="md:hidden">
+  <button id="mobile-menu-btn" class="text-white">
+    ☰
+  </button>
+</div>
+
+<div id="mobile-menu" class="hidden absolute top-16 right-0 bg-gray-800 w-48 py-4 flex flex-col space-y-2">
+  <a href="#home" class="px-4 py-2 hover:bg-gray-700">Home</a>
+  <a href="projects.html" class="px-4 py-2 hover:bg-gray-700">Projects</a>
+  <a href="skills.html" class="px-4 py-2 hover:bg-gray-700">Skills</a>
+  <a href="#contact" class="px-4 py-2 hover:bg-gray-700">Contact</a>
+</div>
+
+<script>
+const btn = document.getElementById('mobile-menu-btn');
+const menu = document.getElementById('mobile-menu');
+btn.addEventListener('click', () => {
+  menu.classList.toggle('hidden');
+});
+</script>
+
 
     <!-- Hero Section -->
     <section id="home" class="hero-bg">
