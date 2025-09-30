@@ -173,6 +173,46 @@ function initializeTypewriter() {
         });
     }
 }
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    // Toggle the hidden class
+                    mobileMenu.classList.toggle('hidden');
+                    
+                    // Change icon between hamburger and X
+                    const paths = mobileMenuButton.querySelector('svg').getElementsByTagName('path');
+                    if (mobileMenu.classList.contains('hidden')) {
+                        // Show hamburger icon
+                        paths[0].setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+                    } else {
+                        // Show X icon
+                        paths[0].setAttribute('d', 'M6 18L18 6M6 6l12 12');
+                    }
+                });
+
+                // Close menu when clicking on links
+                const mobileLinks = mobileMenu.querySelectorAll('a');
+                mobileLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        mobileMenu.classList.add('hidden');
+                        const paths = mobileMenuButton.querySelector('svg').getElementsByTagName('path');
+                        paths[0].setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+                    });
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target)) {
+                        mobileMenu.classList.add('hidden');
+                        const paths = mobileMenuButton.querySelector('svg').getElementsByTagName('path');
+                        paths[0].setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+                    }
+                });
+            }
+        });
 
 // Enhanced download with iOS-style feedback
 function downloadResume() {
