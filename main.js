@@ -158,13 +158,13 @@ function initializeTypewriter() {
                 'AI Enthusiast',
                 'AvGeek ✈️'
             ],
-            typeSpeed: 45,
-            backSpeed: 25,
-            backDelay: 2000,
+            typeSpeed: 40,
+            backSpeed: 20,
+            backDelay: 2500,
             startDelay: 800,
             loop: true,
             showCursor: true,
-            cursorChar: '|',
+            cursorChar: '',
             contentType: 'html',
             onStringTyped: function() {
                 // iOS-like completion haptic
