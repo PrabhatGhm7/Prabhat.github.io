@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prabhat Ghimire — ML & Aviation Safety</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* ══════════════════════════════════════
+       TOKENS
+    ══════════════════════════════════════ */
+    :root {
+      --bg:           #f8f7f4;
+      --bg-soft:      #f0ede7;
+      --surface:      #ffffff;
+      --border:       #e4e0d8;
+      --border-soft:  #ede9e2;
+
+      --text:         #18181b;
+      --text-2:       #52525b;
+      --text-3:       #a1a1aa;
+
+      --blue:         #2563eb;
+      --blue-light:   #3b82f6;
+      --blue-pale:    #eff6ff;
+      --blue-glow:    rgba(37,99,235,0.12);
+
+      --amber:        #d97706;
+      --amber-pale:   #fef9ee;
+
+      --green:        #16a34a;
+      --green-pale:   rgba(22,163,74,0.1);
+
+      --sky-start:    #bfdbfe;
+      --sky-end:      #e0f2fe;
+
+      --shadow-xs:    0 1px 3px rgba(0,0,0,0.06);
+      --shadow-sm:    0 4px 12px rgba(0,0,0,0.07);
+      --shadow-md:    0 8px 30px rgba(0,0,0,0.1);
+      --shadow-lg:    0 20px 60px rgba(0,0,0,0.12);
+
+      --radius:       12px;
+      --radius-sm:    8px;
+      --radius-full:  999px;
+
+      --ease:         cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg:           #0f1117;
+      --bg-soft:      #161b26;
+      --surface:      #1a2030;
+      --border:       #252d3d;
+      --border-soft:  #1e2636;
+
+      --text:         #f4f4f5;
+      --text-2:       #a1a1aa;
+      --text-3:       #52525b;
+
+      --blue:         #60a5fa;
+      --blue-light:   #93c5fd;
+      --blue-pale:    rgba(96,165,250,0.08);
+      --blue-glow:    rgba(96,165,250,0.15);
+
+      --amber:        #fbbf24;
+      --amber-pale:   rgba(251,191,36,0.08);
+
+      --green:        #4ade80;
+      --green-pale:   rgba(74,222,128,0.1);
+
+      --sky-start:    #1e3a5f;
+      --sky-end:      #0f1e35;
+
+      --shadow-xs:    0 1px 3px rgba(0,0,0,0.2);
+      --shadow-sm:    0 4px 12px rgba(0,0,0,0.3);
+      --shadow-md:    0 8px 30px rgba(0,0,0,0.4);
+      --shadow-lg:    0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    /* ══════════════════════════════════════
+       BASE
+    ══════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+      transition: background 0.35s var(--ease), color 0.35s var(--ease);
+    }
+
+    ::selection { background: var(--blue-pale); color: var(--blue); }
+    a { color: inherit; text-decoration: none; }
+
+    /* ══════════════════════════════════════
+       LAYOUT
+    ══════════════════════════════════════ */
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    section { padding: 6rem 0; }
+
+    /* alternating section backgrounds */
+    .section-alt { background: var(--bg-soft); }
+
+    /* ══════════════════════════════════════
+       TYPOGRAPHY SYSTEM
+    ══════════════════════════════════════ */
+    .eyebrow {
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.9rem;
+    }
+    .eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 2px;
+      background: var(--blue);
+      border-radius: 2px;
+    }
+
+    .section-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-sub {
+      font-size: 1rem;
+      color: var(--text-2);
+      font-weight: 300;
+      max-width: 520px;
+      margin-bottom: 3rem;
+    }
+
+    /* ══════════════════════════════════════
+       BUTTONS
+    ══════════════════════════════════════ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.7rem 1.6rem;
+      border-radius: var(--radius-sm);
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.25s var(--ease);
+      letter-spacing: 0.01em;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37,99,235,0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+    }
+    .btn-outline:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      transform: translateY(-2px);
+    }
+
+    /* ══════════════════════════════════════
+       NAV
+    ══════════════════════════════════════ */
+    #navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border-soft);
+      transition: background 0.35s var(--ease), box-shadow 0.3s;
+    }
+    #navbar.scrolled {
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .nav-logo {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .nav-logo span { color: var(--blue); }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+      align-items: center;
+    }
+    .nav-links a {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-2);
+      position: relative;
+      padding-bottom: 2px;
+      transition: color 0.2s;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: var(--blue);
+      border-radius: 2px;
+      transition: width 0.3s var(--ease);
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .theme-toggle {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text-2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      transition: all 0.25s var(--ease);
+      flex-shrink: 0;
+    }
+    .theme-toggle:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      transform: rotate(20deg);
+    }
+
+    .nav-resume {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.42rem 1.1rem;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--blue);
+      color: var(--blue);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.25s var(--ease);
+      white-space: nowrap;
+    }
+    .nav-resume:hover {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    /* hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px; height: 2px;
+      background: var(--text-2);
+      border-radius: 2px;
+      transition: all 0.3s var(--ease);
+    }
+
+    /* Mobile drawer */
+    .mobile-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      z-index: 150;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(3px);
+    }
+    .mobile-overlay.open { display: block; }
+
+    .mobile-drawer {
+      position: absolute;
+      top: 0; right: 0;
+      width: 260px; height: 100%;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      padding: 4.5rem 2rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+    }
+    .mobile-drawer a, .mobile-drawer button {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-2);
+      text-decoration: none;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'Poppins', sans-serif;
+      text-align: left;
+      transition: color 0.2s;
+    }
+    .mobile-drawer a:hover, .mobile-drawer button:hover { color: var(--blue); }
+
+    /* ══════════════════════════════════════
+       RESUME MODAL
+    ══════════════════════════════════════ */
+    .modal-bg {
+      display: none;
+      position: fixed; inset: 0;
+      z-index: 200;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(5px);
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-bg.open { display: flex; }
+
+    .modal-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      width: 100%; max-width: 840px;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      animation: modal-in 0.3s var(--ease);
+    }
+    @keyframes modal-in {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .modal-top {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .modal-top-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600; font-size: 0.9rem; color: var(--text);
+    }
+    .modal-top-actions { display: flex; gap: 0.6rem; align-items: center; }
+
+    .modal-dl {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.78rem; font-weight: 600;
+      padding: 0.38rem 0.9rem;
+      border-radius: var(--radius-sm);
+      background: var(--blue); color: #fff;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .modal-dl:hover { opacity: 0.88; }
+
+    .modal-x {
+      width: 30px; height: 30px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      background: none; color: var(--text-2);
+      cursor: pointer; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .modal-x:hover { color: var(--text); border-color: var(--text-3); }
+
+    .modal-body { flex: 1; overflow: hidden; }
+    .modal-body iframe { width: 100%; height: 100%; border: none; min-height: 70vh; }
+
+    /* ══════════════════════════════════════
+       HERO
+    ══════════════════════════════════════ */
+    #hero {
+      padding: 6rem 0 5rem;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    /* Subtle horizon gradient behind hero */
+    #hero::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 60%;
+      background: linear-gradient(to top, var(--sky-start), transparent);
+      opacity: 0.12;
+      pointer-events: none;
+    }
+
+    /* Floating plane path decoration */
+    .hero-deco {
+      position: absolute;
+      top: 2.5rem; right: 3rem;
+      opacity: 0.07;
+      font-size: 4rem;
+      animation: float 6s ease-in-out infinite;
+      pointer-events: none;
+      user-select: none;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-10deg); }
+      50%       { transform: translateY(-12px) rotate(-7deg); }
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-kicker {
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.4rem;
+    }
+    .hero-kicker::before {
+      content: '';
+      width: 24px; height: 1px;
+      background: var(--text-3);
+    }
+
+    .hero-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(3.2rem, 7vw, 5.2rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+    .hero-name .accent {
+      color: var(--blue);
+      position: relative;
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--text-2);
+      max-width: 480px;
+      margin-bottom: 1.75rem;
+      line-height: 1.75;
+    }
+    .hero-desc strong { color: var(--text); font-weight: 500; }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 2.25rem;
+    }
+    .htag {
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      padding: 0.3rem 0.8rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      background: var(--surface);
+      transition: all 0.2s;
+    }
+    .htag:hover { border-color: var(--blue); color: var(--blue); }
+
+    .hero-btns {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    /* Hero card */
+    .hero-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.3s var(--ease);
+    }
+    .hero-card:hover { box-shadow: var(--shadow-md); }
+
+    .hcard-label {
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .hcard-stat {
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .hcard-stat:last-of-type { border-bottom: none; }
+
+    .hcard-val {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--blue);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .hcard-desc {
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: var(--text-2);
+      line-height: 1.5;
+    }
+
+    .hcard-footer {
+      margin-top: 1.2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .status-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: var(--green-pale);
+      border: 1px solid rgba(22,163,74,0.2);
+      padding: 0.3rem 0.8rem;
+      border-radius: var(--radius-full);
+    }
+    [data-theme="dark"] .status-dot { border-color: rgba(74,222,128,0.2); }
+    .status-dot::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ══════════════════════════════════════
+       ABOUT
+    ══════════════════════════════════════ */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .about-body p {
+      font-size: 0.97rem;
+      font-weight: 300;
+      color: var(--text-2);
+      margin-bottom: 1rem;
+      line-height: 1.85;
+    }
+    .about-body p strong { color: var(--text); font-weight: 500; }
+
+    .about-pull {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text);
+      line-height: 1.6;
+      border-left: 3px solid var(--blue);
+      padding-left: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    .goal-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .goal-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: all 0.3s var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+    .goal-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--blue);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.3s var(--ease);
+    }
+    .goal-card:hover { box-shadow: var(--shadow-sm); transform: translateX(4px); }
+    .goal-card:hover::before { transform: scaleY(1); }
+
+    .goal-icon { font-size: 1.3rem; margin-bottom: 0.6rem; }
+    .goal-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600; font-size: 0.9rem;
+      color: var(--text); margin-bottom: 0.4rem;
+    }
+    .goal-desc { font-size: 0.82rem; color: var(--text-2); font-weight: 300; line-height: 1.65; }
+
+    /* ══════════════════════════════════════
+       EXPERIENCE
+    ══════════════════════════════════════ */
+    .exp-timeline {
+      max-width: 740px;
+      margin: 0 auto;
+    }
+
+    .exp-entry {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      position: relative;
+    }
+    .exp-entry::after {
+      content: '';
+      position: absolute;
+      left: 170px;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .exp-left {
+      padding: 2rem 1.75rem 2rem 0;
+      text-align: right;
+    }
+    .exp-period {
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--text-3);
+      line-height: 1.6;
+      margin-bottom: 0.3rem;
+    }
+    .exp-org {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-2);
+    }
+
+    .exp-right {
+      padding: 2rem 0 2rem 2rem;
+      border-bottom: 1px solid var(--border-soft);
+      position: relative;
+    }
+    .exp-right::before {
+      content: '';
+      position: absolute;
+      left: -5px; top: 2.55rem;
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2.5px solid var(--blue);
+      z-index: 1;
+      transition: background 0.3s;
+    }
+    .exp-entry:hover .exp-right::before { background: var(--blue); }
+
+    .exp-role {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600; font-size: 0.97rem;
+      color: var(--text); margin-bottom: 0.2rem;
+    }
+
+    .exp-type-label {
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.67rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 0.9rem;
+    }
+
+    .exp-bullets {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .exp-bullets li {
+      font-size: 0.85rem; font-weight: 300; color: var(--text-2);
+      padding-left: 1.1rem; position: relative; line-height: 1.65;
+    }
+    .exp-bullets li::before {
+      content: '–'; position: absolute; left: 0; color: var(--text-3);
+    }
+
+    .cur-badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.62rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-full);
+      background: var(--green-pale);
+      color: var(--green);
+      border: 1px solid rgba(22,163,74,0.2);
+      margin-left: 0.6rem;
+      vertical-align: middle;
+    }
+    [data-theme="dark"] .cur-badge { border-color: rgba(74,222,128,0.2); }
+    .cur-badge::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    /* ══════════════════════════════════════
+       PROJECTS
+    ══════════════════════════════════════ */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+  .proj-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 10px 18px;
+
+  color: white;
+  font-size: 14px;
+  text-decoration: none;
+
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border: none;
+  border-radius: 12px;
+
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+  transition: all 0.3s ease;
+}
+
+.proj-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 25px rgba(139, 92, 246, 0.6);
+}
+
+    .proj-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      transition: all 0.3s var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+    .proj-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--blue-light));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s var(--ease);
+    }
+    .proj-card:hover { box-shadow: var(--shadow-md); transform: translateY(-4px); }
+    .proj-card:hover::after { transform: scaleX(1); }
+
+    .proj-card.featured {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 2.5rem;
+    }
+
+    .proj-card.featured::after { display: none; }
+    .proj-card.featured {
+      border-color: rgba(37,99,235,0.2);
+      background: linear-gradient(135deg, var(--surface), var(--blue-pale));
+    }
+    [data-theme="dark"] .proj-card.featured {
+      background: linear-gradient(135deg, var(--surface), rgba(96,165,250,0.05));
+    }
+
+    .proj-header {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 1rem; margin-bottom: 0.9rem;
+    }
+
+    .proj-badge {
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 0.25rem 0.7rem; border-radius: var(--radius-full);
+      white-space: nowrap;
+    }
+    .badge-amber {
+      background: var(--amber-pale); color: var(--amber);
+      border: 1px solid rgba(217,119,6,0.2);
+    }
+    [data-theme="dark"] .badge-amber { border-color: rgba(251,191,36,0.2); }
+    .badge-blue {
+      background: var(--blue-pale); color: var(--blue);
+      border: 1px solid rgba(37,99,235,0.15);
+    }
+
+    .proj-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700; font-size: 1rem;
+      color: var(--text); line-height: 1.35; margin-bottom: 0.7rem;
+    }
+    .featured .proj-title { font-size: 1.2rem; }
+
+    .proj-desc {
+      font-size: 0.85rem; font-weight: 300;
+      color: var(--text-2); line-height: 1.75; margin-bottom: 1.1rem;
+    }
+
+    .proj-bullets {
+      list-style: none; display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.25rem;
+    }
+    .proj-bullets li {
+      font-size: 0.8rem; font-weight: 300; color: var(--text-2);
+      padding-left: 1rem; position: relative; line-height: 1.6;
+    }
+    .proj-bullets li::before {
+      content: '→'; position: absolute; left: 0;
+      color: var(--blue); font-size: 0.72rem; top: 0.05em;
+    }
+
+    .proj-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .ptag {
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.67rem; font-weight: 500; letter-spacing: 0.04em;
+      padding: 0.22rem 0.6rem; border-radius: var(--radius-sm);
+      background: var(--bg-soft); border: 1px solid var(--border);
+      color: var(--text-2);
+    }
+
+    .proj-aside { display: flex; flex-direction: column; gap: 0.75rem; }
+    .aside-box {
+      background: var(--bg-soft); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1.1rem; text-align: center;
+    }
+    .aside-val {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2rem; font-weight: 700; color: var(--blue);
+      line-height: 1; margin-bottom: 0.3rem;
+    }
+    .aside-lbl { font-size: 0.75rem; font-weight: 300; color: var(--text-2); }
+
+    /* ══════════════════════════════════════
+       SKILLS
+    ══════════════════════════════════════ */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    .skill-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: all 0.3s var(--ease);
+    }
+    .skill-card:hover {
+      box-shadow: var(--shadow-sm);
+      border-color: var(--blue);
+    }
+
+    .skill-head {
+      display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem;
+    }
+    .skill-icon { font-size: 1.1rem; }
+    .skill-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600; font-size: 0.85rem; color: var(--text);
+    }
+    .skill-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .chip {
+      font-size: 0.75rem; font-weight: 300;
+      padding: 0.25rem 0.65rem; border-radius: var(--radius-sm);
+      background: var(--bg-soft); border: 1px solid var(--border);
+      color: var(--text-2);
+    }
+
+    /* ══════════════════════════════════════
+       EDUCATION
+    ══════════════════════════════════════ */
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .edu-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: all 0.3s var(--ease);
+    }
+    .edu-card:hover { box-shadow: var(--shadow-sm); }
+    .edu-card.primary { border-color: rgba(37,99,235,0.25); }
+    [data-theme="dark"] .edu-card.primary { border-color: rgba(96,165,250,0.2); }
+
+    .edu-icon { font-size: 1.4rem; margin-bottom: 0.7rem; }
+    .edu-degree {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700; font-size: 0.95rem;
+      color: var(--text); margin-bottom: 0.3rem;
+    }
+    .edu-school { font-size: 0.82rem; color: var(--text-2); font-weight: 300; margin-bottom: 0.5rem; }
+    .edu-year {
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.7rem; font-weight: 500;
+      letter-spacing: 0.08em; color: var(--text-3); margin-bottom: 0.75rem;
+    }
+    .edu-note { font-size: 0.8rem; color: var(--text-2); font-weight: 300; line-height: 1.65; }
+
+    /* ══════════════════════════════════════
+       CONTACT
+    ══════════════════════════════════════ */
+    #contact { text-align: center; }
+
+    .contact-header { margin-bottom: 3rem; }
+    .contact-header .section-sub { margin: 0 auto; }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .contact-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1.75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.3s var(--ease);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--blue-glow);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .contact-box:hover { border-color: var(--blue); transform: translateY(-3px); box-shadow: var(--shadow-sm); }
+    .contact-box:hover::before { opacity: 1; }
+
+    .cbox-icon {
+      font-size: 1.6rem;
+      transition: transform 0.3s var(--ease);
+    }
+    .contact-box:hover .cbox-icon { transform: scale(1.15); }
+
+    .cbox-label {
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--text-3); display: block;
+    }
+
+    .cbox-action {
+      font-size: 0.82rem; font-weight: 500; color: var(--text-2);
+      transition: color 0.2s;
+    }
+    .contact-box:hover .cbox-action { color: var(--blue); }
+
+    /* ══════════════════════════════════════
+       RESUME CTA STRIP
+    ══════════════════════════════════════ */
+    .resume-strip {
+      margin-top: 3.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .strip-left { text-align: left; }
+    .strip-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700; font-size: 1rem; color: var(--text); margin-bottom: 0.25rem;
+    }
+    .strip-sub { font-size: 0.82rem; color: var(--text-2); font-weight: 300; }
+
+    .strip-actions { display: flex; gap: 0.6rem; flex-shrink: 0; flex-wrap: wrap; }
+
+    /* ══════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════ */
+    footer {
+      border-top: 1px solid var(--border-soft);
+      padding: 2rem;
+    }
+    .footer-inner {
+      max-width: 1080px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.75rem;
+    }
+    .footer-copy {
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.72rem; font-weight: 400;
+      letter-spacing: 0.04em; color: var(--text-3);
+    }
+
+    /* ══════════════════════════════════════
+       SCROLL REVEAL ANIMATIONS
+    ══════════════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s var(--ease), transform 0.65s var(--ease);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: opacity 0.65s var(--ease), transform 0.65s var(--ease);
+    }
+    .reveal-left.visible { opacity: 1; transform: none; }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(20px);
+      transition: opacity 0.65s var(--ease), transform 0.65s var(--ease);
+    }
+    .reveal-right.visible { opacity: 1; transform: none; }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════ */
+    @media (max-width: 860px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-card { max-width: 440px; }
+      .hero-deco { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .proj-card.featured { grid-template-columns: 1fr; gap: 1.5rem; }
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+      .edu-grid { grid-template-columns: 1fr; max-width: 480px; }
+      .resume-strip { flex-direction: column; text-align: center; }
+      .strip-left { text-align: center; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    @media (max-width: 560px) {
+      section { padding: 4rem 0; }
+      #hero { padding: 4.5rem 0 3.5rem; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr 1fr; }
+      .exp-entry { grid-template-columns: 1fr; }
+      .exp-entry::after { display: none; }
+      .exp-left { text-align: left; padding: 1.5rem 0 0; border-top: 1px solid var(--border-soft); }
+      .exp-right { padding: 0.75rem 0 1.75rem; border-bottom: 1px solid var(--border-soft); }
+      .exp-right::before { display: none; }
+      .hero-card { display: none; }
+    }
+
+    @media (max-width: 380px) {
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─────────── NAV ─────────── -->
+<nav id="navbar">
+  <div class="nav-wrap">
+    <a class="nav-logo" href="#hero">PG<span>.</span></a>
+
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span id="themeIcon">☽</span>
+      </button>
+      <button class="nav-resume" onclick="openModal()">Resume ↗</button>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ─────────── MOBILE DRAWER ─────────── -->
+<div class="mobile-overlay" id="mobileOverlay">
+  <div class="mobile-drawer">
+    <a href="#about"      onclick="closeMobile()">About</a>
+    <a href="#experience" onclick="closeMobile()">Experience</a>
+    <a href="#projects"   onclick="closeMobile()">Projects</a>
+    <a href="#skills"     onclick="closeMobile()">Skills</a>
+    <a href="#contact"    onclick="closeMobile()">Contact</a>
+    <button onclick="openModal();closeMobile()">Resume ↗</button>
+  </div>
+</div>
+
+<!-- ─────────── RESUME MODAL ─────────── -->
+<div class="modal-bg" id="resumeModal" onclick="handleOverlay(event)">
+  <div class="modal-card">
+    <div class="modal-top">
+      <span class="modal-top-title">Prabhat Ghimire — Resume / CV</span>
+      <div class="modal-top-actions">
+        <a class="modal-dl" href="resume.pdf" download="Prabhat_Ghimire_Resume.pdf">↓ Download</a>
+        <button class="modal-x" onclick="closeModal()">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <iframe src="resume.pdf" title="Resume"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────── HERO ─────────── -->
+<section id="hero">
+  <div class="hero-deco">✈</div>
+  <div class="wrap">
+    <div class="hero-grid">
+
+      <div>
+        <div class="hero-kicker">Pokhara, Nepal · Open to opportunities</div>
+
+        <h1 class="hero-name">
+          Prabhat<br><span class="accent">Ghimire</span>
+        </h1>
+
+        <p class="hero-desc">
+          Computer engineer bridging <strong>machine learning</strong> and <strong>aviation safety</strong> — with a mission to make Nepali skies safer through data-driven research.
+        </p>
+
+        <div class="hero-tags">
+          <span class="htag">ML Research</span>
+          <span class="htag">Aviation Safety</span>
+          <span class="htag">Data Science</span>
+          <span class="htag">Python</span>
+          <span class="htag">Educator</span>
+        </div>
+
+        <div class="hero-btns">
+          <a href="#projects" class="btn btn-primary">View my work</a>
+          <a href="#contact"  class="btn btn-outline">Get in touch</a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <div class="hcard-label">At a glance</div>
+        <div class="hcard-stat">
+          <div class="hcard-val">~100s</div>
+          <div class="hcard-desc">Early CFIT warning achieved in capstone research project</div>
+        </div>
+        <div class="hcard-stat">
+          <div class="hcard-val">25K+</div>
+          <div class="hcard-desc">F1 race data entries processed for prediction model</div>
+        </div>
+        <div class="hcard-stat">
+          <div class="hcard-val">3+</div>
+          <div class="hcard-desc">Years of combined research & teaching experience</div>
+        </div>
+        <div class="hcard-footer">
+          <span class="status-dot">Available for opportunities</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── ABOUT ─────────── -->
+<section id="about" class="section-alt">
+  <div class="wrap">
+    <div class="about-grid">
+
+      <div class="about-body reveal-left">
+        <div class="eyebrow">About</div>
+        <h2 class="section-title">CS meets the cockpit</h2>
+
+        <p>
+          I'm a computer engineering graduate from Pokhara University with a deep interest in the intersection of <strong>machine learning and aviation safety</strong>. My capstone research on "Extending GPWS through Probabilistic Machine Learning for Early CFIT Detection in Challenging Approach Environments" made one thing clear these are exactly the problem space I want to spend the next chapter of my career in.
+        </p>
+        <p>
+          Nepal's mountainous terrain makes its aviation environment one of the most challenging in the world. I believe data-driven approaches can meaningfully shift the odds, and I'm working toward a Masters in Applied Aviation Safety to build the technical foundation to do that.
+        </p>
+        <p>
+          Beyond research, I've spent time teaching computer science at the secondary level — an experience that has sharpened how I communicate complex ideas clearly, which I think makes for better research and better collaboration.
+        </p>
+
+        <blockquote class="about-pull">
+          "Every safe flight is a system working as designed. My purpose is clear, to help build an aviation system where safety is the standard, notthe exception."
+        </blockquote>
+      </div>
+
+      <div class="goal-cards reveal-right">
+        <div class="goal-card">
+          <div class="goal-icon"></div>
+          <div class="goal-title">Masters in Aviation Safety</div>
+          <div class="goal-desc">Actively seeking postgraduate study in Aviation  or Aviation Safety, bridging CS rigour with aviation domain expertise.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon"></div>
+          <div class="goal-title">Probabilistic Risk Modelling</div>
+          <div class="goal-desc">Applying rare-event modelling, temporal analysis, and simulation-based augmentation to safety-critical prediction problems.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon"></div>
+          <div class="goal-title">Safer Nepali Skies</div>
+          <div class="goal-desc">Nepal's terrain creates unique hazards. I want to build locally relevant tools and research that address those specific risks head-on.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── EXPERIENCE ─────────── -->
+ 
+<section id="experience">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center; margin-bottom: 0.5rem;">
+      <div class="eyebrow" style="justify-content:center;">Career</div>
+      <h2 class="section-title">Experience</h2>
+      <p class="section-sub" style="margin: 0 auto 3rem;">From ML pipelines to classrooms — a well-rounded foundation.</p>
+    </div>
+
+    <style>
+      .reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+  will-change: transform, opacity;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+    </style>
+
+
+<script>
+const reveals = document.querySelectorAll('.reveal');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('active');
+    }
+  });
+}, {
+  threshold: 0.15
+});
+
+reveals.forEach(el => observer.observe(el));
+</script>
+    <div class="exp-timeline">
+
+      <div class="exp-entry reveal">
+        <div class="exp-left">
+          <div class="exp-period">Current</div>
+          <div class="exp-org">Junior Citizen Academy<br>Pokhara</div>
+        </div>
+        <div class="exp-right">
+          <div class="exp-role">
+            Secondary CS Teacher
+            <span class="cur-badge">Current</span>
+          </div>
+          <div class="exp-type-label">Education</div>
+          <ul class="exp-bullets">
+            <li>Teaching computer science to secondary-level students, simplifying technical concepts into clear, structured lessons</li>
+            <li>Designing lesson plans and evaluation methods to track understanding and progression</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-entry reveal">
+        <div class="exp-left">
+          <div class="exp-period">May – Oct 2025</div>
+          <div class="exp-org">YHH IT Solutions</div>
+        </div>
+        <div class="exp-right">
+          <div class="exp-role">R&D Intern</div>
+          <div class="exp-type-label">Research · AI</div>
+          <ul class="exp-bullets">
+            <li>Designed data processing pipelines improving experimental efficiency and reproducibility</li>
+            <li>Built structured evaluation frameworks to compare model performance and extract meaningful insights</li>
+            <li>Collected, cleaned, and validated structured and unstructured datasets for AI prototype development</li>
+            <li>Prepared technical summaries and visual materials to support internal decision-making</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-entry reveal">
+        <div class="exp-left">
+          <div class="exp-period">Nov 2023 – Apr 2024</div>
+          <div class="exp-org">Together We Can, Nepal</div>
+        </div>
+        <div class="exp-right">
+          <div class="exp-role">ML Intern</div>
+          <div class="exp-type-label">Machine Learning · Backend</div>
+          <ul class="exp-bullets">
+            <li>Developed predictive ML pipelines with optimised training workflows and improved model accuracy</li>
+            <li>Designed feature engineering processes handling 20+ structured performance indicators</li>
+            <li>Built RESTful APIs (Django) for efficient database querying and structured data exchange</li>
+            <li>Documented model assumptions, findings, and limitations in structured technical reports</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-entry reveal">
+        <div class="exp-left">
+          <div class="exp-period">Sep 2021 – Sep 2022</div>
+          <div class="exp-org">Tamakoshi English Boarding School</div>
+        </div>
+        <div class="exp-right">
+          <div class="exp-role">Secondary CS Teacher</div>
+          <div class="exp-type-label">Education</div>
+          <ul class="exp-bullets">
+            <li>Taught computer science to Grade 5–10 students, simplifying complex technical concepts into structured lessons</li>
+            <li>Designed lesson plans and evaluation methods to assess learning progression</li>
+            <li>Contributed to academic planning, student evaluation, and classroom management</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── PROJECTS ─────────── -->
+<section id="projects" class="section-alt">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center; margin-bottom: 0.5rem;">
+      <div class="eyebrow" style="justify-content:center;">Work</div>
+      <h2 class="section-title">Projects</h2>
+      <p class="section-sub" style="margin: 0 auto 3rem;">Research and engineering at the intersection of ML and real-world safety.</p>
+    </div>
+
+    <div class="projects-grid">
+
+      <!-- CAPSTONE -->
+      <div class="proj-card featured reveal">
+        <div class="proj-main">
+          <div class="proj-header">
+            <span class="proj-badge badge-amber">Capstone Research</span>
+          </div>
+          <div class="proj-title">
+            Extending GPWS Through Probabilistic Machine Learning for Early CFIT Detection
+          </div>
+          <p class="proj-desc">
+            Research into probabilistic ML methods to improve aviation safety systems, targeting Controlled Flight Into Terrain (CFIT) — one of aviation's most persistent fatal accident categories. Applied temporal pattern analysis and rare-event modelling to push the boundaries of ground proximity warning capability.
+          </p>
+          <ul class="proj-bullets">
+            <li>Achieved early warnings ~100 seconds before potential collision events</li>
+            <li>Used simulation-based data augmentation to address severe class imbalance</li>
+            <li>Combined temporal pattern analysis with probabilistic risk prediction</li>
+            <li>Prototyped and validated using simulated aviation flight data</li>
+          </ul>
+          <div class="proj-tags">
+            <span class="ptag">Probabilistic ML</span>
+            <span class="ptag">Temporal Analysis</span>
+            <span class="ptag">Rare-Event Modelling</span>
+            <span class="ptag">Simulation</span>
+
+            <span class="ptag">Matlab</span>
+            <span class="ptag">Data Augmentation</span>
+            <span class="ptag">Python</span>
+          </div>
+        </div>
+        <div class="proj-aside">
+          <div class="aside-box">
+            <div class="aside-val">~100s</div>
+            <div class="aside-lbl">Early warning before impact</div>
+          </div>
+          <div class="aside-box">
+            <div class="aside-val">CFIT</div>
+            <div class="aside-lbl">Controlled Flight Into Terrain</div>
+          </div>
+          <div class="aside-box">
+            <div class="aside-val">GPWS</div>
+            <div class="aside-lbl">Ground Proximity Warning</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- F1 -->
+      <div class="proj-card reveal">
+        <div class="proj-header">
+          <span class="proj-badge badge-blue">ML · Analytics</span>
+        </div>
+        <div class="proj-title">Race Analytics: Predicting F1 Champions Using Machine Learning</div>
+        <p class="proj-desc">
+          End-to-end ML pipeline processing 25,000+ race entries to predict Formula 1 championship outcomes — with rigorous feature engineering and interactive visualisation.
+        </p>
+        <ul class="proj-bullets">
+          <li>Improved prediction accuracy by 15%, reduced training time by 20%</li>
+          <li>Engineered features from 25,000+ entries across multiple sources</li>
+          <li>Built exploratory dashboards for trends and anomaly detection</li>
+          <li>Deployed interactive interface via Gradio</li>
+        </ul>
+        <div class="proj-tags">
+          <span class="ptag">PyTorch</span>
+          <span class="ptag">Transformer</span>
+          <span class="ptag">Speech Recognition</span>
+          <span class="ptag">Python</span>
+          <span class="ptag">Gradio</span>
+        </div>
+          <!-- Live Demo Button -->
+  <a href="https://huggingface.co/spaces/Prabhat17/Neural_Network_f1" target="_blank" class="proj-btn">
+    Live Demo
+  </a>
+
+      </div>
+
+
+<!-- ATC -->
+<div class="proj-card reveal">
+  <div class="proj-header">
+    <span class="proj-badge badge-blue">NLP, Speech Recognition</span>
+  </div>
+
+  <div class="proj-title">Command Classification for ATC</div>
+
+  <p class="proj-desc">
+    AI-driven system that classifies air traffic control voice commands in real time using DistilBERT and speech-to-text integration.
+  </p>
+
+  <ul class="proj-bullets">
+    <li>Real-time audio processing and transcription%</li>
+    <li>DistilBERT model fine-tuned for ATC command classification</li>
+    <li>Integration with speech-to-text APIs for accurate transcription</li>
+    <li>Improved communication reliability in aviation by accurately classifying ATC commands in real time.</li>
+  </ul>
+
+  <div class="proj-tags">
+    <span class="ptag">Scikit-learn</span>
+    <span class="ptag">Feature Engineering</span>
+    <span class="ptag">EDA</span>
+    <span class="ptag">Matplotlib</span>
+    <span class="ptag">Gradio</span>
+  </div>
+
+  <!-- Live Demo Button -->
+  <a href="https://huggingface.co/spaces/Prabhat17/ATC_Prediction" target="_blank" class="proj-btn">
+    Live Demo
+  </a>
+</div>
+
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── SKILLS ─────────── -->
+<section id="skills">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center; margin-bottom: 0.5rem;">
+      <div class="eyebrow" style="justify-content:center;">Technical profile</div>
+      <h2 class="section-title">Skills</h2>
+      <p class="section-sub" style="margin: 0 auto 3rem;">A research-focused toolkit built around Python, with depth in ML and data analysis.</p>
+    </div>
+
+    <style>
+ #skills-fmc {
+  --bg: #0a0f14;
+  --panel: #0d141b;
+  --surface: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 204, 102, 0.35);
+  --text: #ffcc66;
+  --muted: rgba(255, 204, 102, 0.7);
+  --accent: #ffcc66;
+  --shadow: rgba(0, 0, 0, 0.4);
+
+  background: var(--bg);
+  color: var(--text);
+  padding: 4rem 0;
+  font-family: "Courier New", monospace;
+}
+
+/* LIGHT MODE ONLY FOR THIS SECTION */
+body.light #skills-fmc {
+  --bg: #f5f7fa;
+  --panel: #ffffff;
+  --surface: rgba(0, 0, 0, 0.05);
+  --border: rgba(0, 0, 0, 0.15);
+  --text: #1a1a1a;
+  --muted: rgba(0, 0, 0, 0.6);
+  --accent: #2b2b2b;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* ===== FMC LAYOUT ===== */
+#skills-fmc .fmc {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* ===== LSK BUTTONS ===== */
+#skills-fmc .lsk {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#skills-fmc .lsk div {
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px;
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+  background: transparent;
+}
+
+#skills-fmc .lsk div:hover {
+  background: var(--surface);
+  transform: translateY(-1px);
+}
+
+/* ===== SCREEN ===== */
+#skills-fmc .fmc-screen {
+  width: 650px;
+  height: 420px;
+  background: var(--panel);
+  border: 2px solid var(--border);
+  box-shadow: 0 20px 50px var(--shadow);
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* ===== HEADER ===== */
+#skills-fmc .fmc-header {
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+  color: var(--text);
+}
+
+/* ===== ROWS ===== */
+#skills-fmc .row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+#skills-fmc .row span:last-child {
+  color: var(--muted);
+}
+
+/* ===== FOOTER ===== */
+#skills-fmc .footer {
+  position: absolute;
+  bottom: 30px;
+  width: 100%;
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ===== CURSOR ===== */
+#skills-fmc .cursor {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: var(--accent);
+  animation: fmc-blink 0.8s infinite;
+}
+
+@keyframes fmc-blink {
+  50% { opacity: 0; }
+}
+
+/* ===== SMOOTH CONTENT CHANGE ===== */
+#skills-fmc #content {
+  transition: opacity 0.2s ease;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  #skills-fmc .fmc {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #skills-fmc .fmc-screen {
+    width: 95%;
+    height: auto;
+    min-height: 380px;
+  }
+}
+    </style>
+
+
+<section id="skills-fmc">
+  <div class="wrap">
+
+    <div class="reveal" style="text-align:center; margin-bottom: 2rem;">
+      <div class="eyebrow">FMS SYSTEM</div>
+      <h2 class="section-title">TECHNICAL PROFILE</h2>
+    </div>
+
+    <div class="fmc">
+
+      <!-- LEFT LSK -->
+      <div class="lsk left">
+        <div onclick="loadPage('prog')">PROG</div>
+        <div onclick="loadPage('ml')">ML</div>
+        <div onclick="loadPage('data')">DATA</div>
+        <div onclick="loadPage('tools')">SYS</div>
+        <div onclick="loadPage('db')">DB</div>
+      </div>
+
+      <!-- SCREEN -->
+      <div class="fmc-screen">
+
+        <div class="fmc-header">
+          FMS // INIT PAGE
+        </div>
+
+        <div id="content"></div>
+
+        <div class="footer">
+          LSK SELECT TO VIEW SUBSYSTEM
+        </div>
+
+        <div class="cursor">█</div>
+      </div>
+
+      <!-- RIGHT LSK (RETURN / HOME) -->
+      <div class="lsk right">
+        <div onclick="loadPage('init')">INIT</div>
+        <div onclick="loadPage('init')">RETURN</div>
+        <div onclick="loadPage('init')">HOME</div>
+        <div onclick="loadPage('init')">INIT</div>
+        <div onclick="loadPage('init')">RESET</div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+
+<script>
+
+const pages = {
+
+  init: `
+    <div class="row"><span>PROG</span><span>Python</span></div>
+    <div class="row"><span>ML</span><span>Scikit / TF / PyTorch</span></div>
+    <div class="row"><span>NAV DATA</span><span>Data Processing & EDA</span></div>
+    <div class="row"><span>SYS</span><span>Django / Git / Deployment</span></div>
+    <div class="row"><span>DB</span><span>MySQL / SQLite</span></div>
+  `,
+
+  prog: `
+    <div class="row"><span>PROGRAMMING</span><span>Python</span></div>
+  `,
+
+  ml: `
+    <div class="row"><span>ML</span><span>Scikit-learn · TensorFlow · PyTorch</span></div>
+    <div class="row"><span>MATH</span><span>Linear Algebra · Statistics</span></div>
+  `,
+
+  data: `
+    <div class="row"><span>DATA</span><span>Pandas · NumPy · Matplotlib</span></div>
+    <div class="row"><span>WORKFLOW</span><span>EDA · Feature Engineering</span></div>
+  `,
+
+  tools: `
+    <div class="row"><span>WEB</span><span>Django · DRF</span></div>
+    <div class="row"><span>DEV</span><span>Git · GitHub · Jupyter</span></div>
+  `,
+
+  db: `
+    <div class="row"><span>DATABASES</span><span>MySQL · SQLite</span></div>
+  `
+};
+
+function loadPage(key) {
+  const content = document.getElementById("content");
+
+  content.style.opacity = 0;
+
+  setTimeout(() => {
+    content.innerHTML = pages[key] || pages.init;
+    content.style.opacity = 1;
+  }, 180);
+}
+
+/* default INIT page */
+loadPage("init");
+
+</script>
+
+<!-- ─────────── EDUCATION ─────────── -->
+<section id="education" class="section-alt">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center; margin-bottom: 0.5rem;">
+      <div class="eyebrow" style="justify-content:center;">Academic background</div>
+      <h2 class="section-title">Education</h2>
+      <p class="section-sub" style="margin: 0 auto 3rem;">Building toward postgraduate study in aviation safety.</p>
+    </div>
+
+    <div class="edu-grid">
+      <div class="edu-card primary reveal">
+        <div class="edu-icon">🎓</div>
+        <div class="edu-degree">B.Eng. in Computer Engineering</div>
+        <div class="edu-school">Pokhara University, School of Engineering · Pokhara, Nepal</div>
+        <div class="edu-year">2021 – 2026</div>
+      </div>
+
+      <div class="edu-card reveal">
+        <div class="edu-icon">✈️</div>
+        <div class="edu-degree">Masters in Aviation Safety</div>
+        <div class="edu-school">Applied Aviation Safety / Aviation Safety Management</div>
+        <div class="edu-year" style="margin-bottom:0.75rem;">Actively pursuing</div>
+        <div class="edu-note">Seeking postgraduate opportunities that bridge data-driven methods with aviation safety practice, with a focus on Nepal's unique mountain flying environment.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-icons-font@v5/font/simple-icons.min.css">
+<!-- ─────────── CONTACT ─────────── -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-header reveal">
+      <div class="eyebrow" style="justify-content:center;">Contact</div>
+      <h2 class="section-title">Let's talk</h2>
+      <p class="section-sub">
+        Open to research collaborations, Masters programme inquiries, ML consulting, and conversations about aviation safety in Nepal.
+      </p>
+    </div>
+
+<div class="contact-grid">
+
+  <!-- Email -->
+  <a href="mailto:prabhatghimire7@gmail.com" class="contact-box">
+    <span class="cbox-icon"><i class="si si-gmail"></i></span>
+    <span class="cbox-label">Email</span>
+    <span class="cbox-action">Send a message</span>
+  </a>
+
+  <!-- Phone -->
+  <a href="tel:+9779840264502" class="contact-box">
+    <span class="cbox-icon"><i class="si si-whatsapp"></i></span>
+    <span class="cbox-label">Phone</span>
+    <span class="cbox-action">Give me a call</span>
+  </a>
+
+  <!-- LinkedIn -->
+  <a href="https://www.linkedin.com/in/prabhat-ghimire-9b0616262/" target="_blank" class="contact-box">
+    <span class="cbox-icon"><i class="si si-linkedin"></i></span>
+    <span class="cbox-label">LinkedIn</span>
+    <span class="cbox-action">Connect with me</span>
+  </a>
+
+  <!-- Instagram -->
+  <a href="https://www.instagram.com/prabhatghm/" target="_blank" class="contact-box">
+    <span class="cbox-icon"><i class="si si-instagram"></i></span>
+    <span class="cbox-label">Instagram</span>
+    <span class="cbox-action">See my world</span>
+  </a>
+
+</div>
+
+    <div class="resume-strip reveal">
+      <div class="strip-left">
+        <div class="strip-title">Curriculum Vitae</div>
+        <div class="strip-sub">View or download my full resume</div>
+      </div>
+      <div class="strip-actions">
+        <button class="btn btn-primary" onclick="openModal()">View Resume</button>
+        <a class="btn btn-outline" href="resume.pdf" download="Prabhat_Ghimire_Resume.pdf">↓ Download</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── FOOTER ─────────── -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 Prabhat Ghimire · Pokhara, Nepal</span>
+    <span class="footer-copy">Making Nepali skies safer ✈</span>
+  </div>
+</footer>
+
+<!-- ─────────── SCRIPTS ─────────── -->
+<script>
+  /* --- Theme --- */
+  const html = document.documentElement;
+  const themeIcon = document.getElementById('themeIcon');
+  if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    html.setAttribute('data-theme','dark');
+    themeIcon.textContent = '☀';
+  }
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const dark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', dark ? 'light' : 'dark');
+    themeIcon.textContent = dark ? '☽' : '☀';
+  });
+
+  /* --- Navbar scroll shadow --- */
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  /* --- Mobile menu --- */
+  const overlay = document.getElementById('mobileOverlay');
+  document.getElementById('hamburger').addEventListener('click', () => overlay.classList.toggle('open'));
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeMobile(); });
+  function closeMobile() { overlay.classList.remove('open'); }
+
+  /* --- Resume modal --- */
+  const modal = document.getElementById('resumeModal');
+  function openModal() {
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function handleOverlay(e) { if (e.target === modal) closeModal(); }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  /* --- Scroll reveal --- */
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), (i % 5) * 90);
+        revealObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right')
+    .forEach(el => revealObs.observe(el));
+</script>
+</body>
+</html>
